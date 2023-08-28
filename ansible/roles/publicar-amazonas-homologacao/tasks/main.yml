@@ -1,0 +1,17 @@
+- name: Pull no projeto
+  shell: cd {{ base_path }} && git pull origin {{ branch_name }}
+
+- name: Atualizando pacotes projeto
+  shell: cd {{ base_path }} && npm install
+
+- name: Realizando o build do projeto
+  shell: cd {{ base_path }} && npm run build
+
+- name: Remontando o Docker Container
+  shell: cd {{ base_path }} && docker-compose -f docker-compose-homologacao.yml up -d --build
+
+- name: Prima migrations
+  shell: docker exec {{ container_name }} bash -c 'cd /home/node/app && npx prisma migrate dev'
+
+- name: Prima migrations
+  shell: docker exec {{ container_name }} bash -c 'cd /home/node/app && npx prisma generate'

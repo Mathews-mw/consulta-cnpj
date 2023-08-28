@@ -1,0 +1,5 @@
+- hosts: localmachine
+  remote_user: root
+  roles:
+  - gitlab-runner
+  # instalar o ansible

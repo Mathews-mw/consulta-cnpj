@@ -1,0 +1,12 @@
+stages:
+  - publicar-amazonas
+
+homologacao_amazonas:
+  stage: publicar-amazonas
+  script:
+    - cd ansible && ansible-playbook publicar-homologacao-amazonas.yml
+  tags:
+    - nextjs
+    - node
+  only: 
+    - main@mathews.araujo/cadastro-fornecedor

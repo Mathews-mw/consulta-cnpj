@@ -1,0 +1,4 @@
+project_name: cadastro-fornecedor
+base_path: /home/cadastro-fornecedor
+container_name: fornecedores_app_nextjs
+branch_name: main

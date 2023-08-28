@@ -1,0 +1,4 @@
+gitlab:
+  url: https://gitlab.amazonasenergia.com
+  registration_token: rqsXMCjAKysoKJ5oQCXY
+  runner_name: global-runner

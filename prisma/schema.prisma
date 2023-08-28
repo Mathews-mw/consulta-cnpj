@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id                     String    @id @default(uuid())
+  cnpj                   String    @unique
+  situacao               String?
+  status                 String
+  ultima_atualizacao     String?
+  tipo                   String
+  porte                  String
+  nome                   String
+  nome_fantasia          String?
+  abertura               String
+  natureza_juridica      String
+  email                  String
+  telefone               String
+  logradouro             String
+  numero                 String
+  complemento            String
+  cep                    String
+  bairro                 String
+  municipio              String
+  uf                     String
+  efr                    String?
+  data_situacao          String?
+  motivo_situacao        String?
+  situacao_especial      String?
+  data_situacao_especial String?
+  capital_social         String
+  registrado_em          DateTime  @default(now())
+  atualizado_em          DateTime?
+  consulta_rapida        Boolean?
+
+  companyActivities CompanyActivities[]
+  companyPartners   CompanyPartners[]
+
+  @@map("company")
+}
+
+enum ActivityType {
+  PRINCIPAL
+  SECUNDARIA
+}
+
+model CompanyActivities {
+  id                   String       @id @default(uuid())
+  company_cnpj         String
+  activity_code        String
+  activity_description String
+  activity_type        ActivityType @default(PRINCIPAL)
+  companny             Company      @relation(fields: [company_cnpj], references: [cnpj], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([company_cnpj])
+  @@map("company_activities")
+}
+
+model CompanyPartners {
+  id                 String  @id @default(uuid())
+  company_cnpj       String
+  nome               String
+  qualificacao_socio String?
+  pais_origem        String?
+  nome_rep_legal     String?
+  qual_rep_legal     String?
+
+  company Company @relation(fields: [company_cnpj], references: [cnpj], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([company_cnpj])
+  @@map("company_partners")
+}
+
+enum ETransactionControlStatus {
+  ATUALIZANDO
+  CANCELADA
+  CONCLUIDA
+}
+
+enum ETransactionControlProcessType {
+  CADASTRO_FORNECEDOR
+  CONSULTA_FORNECEDOR
+  REVALIDACAO_FORNECEDOR
+  GERAR_RELATORIO
+}
+
+model TransactionControl {
+  id             String                         @id @default(uuid())
+  process_type   ETransactionControlProcessType
+  status         ETransactionControlStatus
+  estimated_time Int?
+  created_at     DateTime                       @default(now())
+  updated_at     DateTime?
+  completed_at   DateTime?
+
+  @@map("transaction_control")
+}
+
+model SpreadSheet {
+  id         String   @id @default(uuid())
+  file_name  String
+  created_at DateTime @default(now())
+
+  @@map("spreadsheets")
+}

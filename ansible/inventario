@@ -1,0 +1,5 @@
+[homologacao_amazonas]
+10.8.0.64
+
+[localmachine]
+127.0.0.1 ansible_connection=local

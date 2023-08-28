@@ -1,0 +1,47 @@
+version: '3'
+
+networks:
+  fornecedores_default:
+    driver: bridge
+
+volumes:
+  pgdata:
+    driver: local
+
+services:
+  db_fornecedores:
+    image: postgres
+    container_name: fornecedores_db_postgres
+    restart: always
+    hostname: host
+    ports:
+      - 5433:5432
+    networks:
+      - fornecedores_default
+    environment:
+      - POSTGRES_DB=fornecedores_postgres
+      - POSTGRES_PASSWORD=fornecedores@ame2023
+      - POSTGRES_USER=fornecedores
+    volumes:
+      - pgdata:/data/postgres
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fornecedores_app_nextjs
+    hostname: fornecedores_app
+    restart: always
+    logging: 
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    networks:
+      - fornecedores_default
+    ports:
+      - 1060:3000
+    depends_on:
+      - db_fornecedores
+    volumes:
+      - /home/cadastro-fornecedor/:/home/node/app
